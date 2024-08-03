@@ -5,11 +5,6 @@
 <template>
     <Layout>
 
-
-
-
-
-
         <div class="px-4 pt-5 my-5 text-center ">
             <br>
     <h1 class="display-5 fw-bold text-body-emphasis">Quiz Application</h1>
@@ -21,8 +16,6 @@
     </div>
 
     <br><br><br><br><br>
-
-
-  </div>
+        </div>
     </Layout>
 </template>
