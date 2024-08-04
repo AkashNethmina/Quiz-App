@@ -1,52 +1,66 @@
 <template>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-      <div class="w-full max-w-md p-8 space-y-4 bg-white shadow-lg rounded-lg">
-        <h1 class="text-2xl font-bold text-center">Admin Login</h1>
+    <div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+      <div class="card w-90 w-md-50 p-4 shadow">
+        <h1 class="card-title text-center mb-4">Admin Login</h1>
         <form @submit.prevent="submit">
-          <div class="mb-4">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
             <input
               v-model="form.email"
+              id="email"
               type="email"
+              class="form-control"
               placeholder="Email"
-              class="w-full px-4 py-2 border rounded-lg"
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
             <input
               v-model="form.password"
+              id="password"
               type="password"
+              class="form-control"
               placeholder="Password"
-              class="w-full px-4 py-2 border rounded-lg"
             />
           </div>
-          <div class="flex items-center justify-between">
-            <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-700">
+          <div class="d-flex justify-content-between">
+            <button  type="submit" class="btn btn-primary">
               Login
             </button>
           </div>
         </form>
-        <div v-if="errors.login" class="mt-4 text-sm text-red-500">
+        <div v-if="errors.login" class="mt-3 text-danger">
           {{ errors.login }}
         </div>
       </div>
     </div>
   </template>
 
-  <script>
+  <script setup>
   import { useForm } from '@inertiajs/vue3';
+  import { router } from '@inertiajs/vue3';
+  import { ref, computed, onMounted, watch } from 'vue';
 
-  export default {
-    setup() {
-      const form = useForm({
-        email: '',
-        password: '',
-      });
 
-      const submit = () => {
-        form.post(route('admin.authenticate'));
-      };
+  const form = useForm({
+    email: '',
+    password: '',
+  });
 
-      return { form, submit };
-    },
+  const errors = ref({
+    login: ''
+  });
+
+  const submit = () => {
+    console.log('Submitting form with:', form.data()); // Debugging line
+    form.post(route('admin.authenticate'), {
+      onSuccess: () => {
+        console.log('Login successful');
+      },
+      onError: (error) => {
+        console.error('Form errors:', error);
+        errors.value.login = 'Login failed. Please check your credentials.';
+      },
+    });
   };
   </script>

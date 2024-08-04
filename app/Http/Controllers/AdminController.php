@@ -1,52 +1,65 @@
 <?php
+// app/Http/Controllers/AdminController.php
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        // Render the login page with Inertia
         return Inertia::render('Admin/Login');
     }
 
+
     public function register()
     {
-        // Render the register page with Inertia
-        return Inertia::render('Admin/Register');
+        $user = new Admin();
+        $user->name ='admin';
+        $user->email ='admin@gmail.com';
+        $user->password = Hash::make('admin');
+        $user->save();
+        return redirect()->route('admin.login')->with('success', 'User created successfuly');
     }
+
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
         if (Auth::guard('admin')->attempt($credentials)) {
-            // Redirect to the dashboard on successful login
-            return redirect()->route('admin.dashboard');
+            $request->session()->regenerate();
+
+            return redirect()->intended('admin/dashboard');
         }
 
-        // Redirect back to login with an error message
-        return redirect()->back()->withErrors(['login' => 'Invalid credentials.']);
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        // Logout the admin and redirect to the login page
         Auth::guard('admin')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
     }
 
     public function dashboard()
     {
-        // Render the dashboard page with Inertia
-        return Inertia::render('Admin/Dashboard', [
-            // Pass any necessary data here
-            'user' => Auth::guard('admin')->user(),
-        ]);
+        return Inertia::render('Admin/Dashboard');
     }
 }

@@ -24,7 +24,8 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': resolve(__dirname, 'resources/js'), // Create alias for your JS directory
+            '@': resolve(__dirname, 'resources/js'),
+            
         },
     },
     server: {
