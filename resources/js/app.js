@@ -27,9 +27,5 @@ createInertiaApp({
 })
 
 // Initialize Inertia Progress
-InertiaProgress.init({
-  delay: 250,       // Delay in ms before the progress bar appears
-  color: '#29d',    // The color of the progress bar
-  includeCSS: true, // Automatically include default styles
-  showSpinner: true // Show the spinner while loading
-})
+
+

@@ -25,7 +25,8 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': resolve(__dirname, 'resources/js'),
-            
+             ziggy: 'vendor/tightenco/ziggy/dist/vue.es',
+
         },
     },
     server: {

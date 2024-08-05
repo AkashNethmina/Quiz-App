@@ -10,8 +10,13 @@
               id="email"
               type="email"
               class="form-control"
+              :class="{ 'is-invalid': form.errors.email }"
               placeholder="Email"
+              required
             />
+            <div v-if="form.errors.email" class="invalid-feedback">
+              {{ form.errors.email }}
+            </div>
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
@@ -20,11 +25,26 @@
               id="password"
               type="password"
               class="form-control"
+              :class="{ 'is-invalid': form.errors.password }"
               placeholder="Password"
+              required
             />
+            <div v-if="form.errors.password" class="invalid-feedback">
+              {{ form.errors.password }}
+            </div>
           </div>
-          <div class="d-flex justify-content-between">
-            <button  type="submit" class="btn btn-primary">
+          <div class="form-group row-3">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              :disabled="form.processing"
+            >
+              <span
+                v-if="form.processing"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
               Login
             </button>
           </div>
@@ -37,30 +57,45 @@
   </template>
 
   <script setup>
-  import { useForm } from '@inertiajs/vue3';
-  import { router } from '@inertiajs/vue3';
-  import { ref, computed, onMounted, watch } from 'vue';
+  import { useForm } from "@inertiajs/vue3";
+  import { ref } from "vue";
+  // Import the route function from Ziggy
+  import { ZiggyVue } from "ziggy-js";
 
-
+  // Form setup with default values
   const form = useForm({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
+  // Error messages
   const errors = ref({
-    login: ''
+    login: "",
   });
 
+  // Submit function to handle form submission
   const submit = () => {
-    console.log('Submitting form with:', form.data()); // Debugging line
-    form.post(route('admin.authenticate'), {
+    console.log("Submitting form with:", form);
+
+    form.post(route("admin.authenticate"), {
       onSuccess: () => {
-        console.log('Login successful');
+        console.log("Login successful");
+        // Handle successful login
+        router.visit("/admin/dashboard"); // Redirecting to a dashboard or admin area
       },
       onError: (error) => {
-        console.error('Form errors:', error);
-        errors.value.login = 'Login failed. Please check your credentials.';
+        console.error("Form errors:", error);
+        // Handle form submission errors
+        errors.value.login = "Login failed. Please check your credentials.";
       },
     });
   };
   </script>
+
+  <style scoped>
+  /* Highlight the input fields with errors */
+  .is-invalid {
+    border-color: #e3342f;
+    background-color: #fddede;
+  }
+  </style>

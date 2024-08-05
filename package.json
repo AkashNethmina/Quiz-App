@@ -15,6 +15,7 @@
         "@inertiajs/vue3": "^1.2.0",
         "@vitejs/plugin-vue": "^5.1.1",
         "bootstrap": "^5.3.3",
-        "vue": "^3.4.34"
+        "vue": "^3.4.34",
+        "ziggy-js": "^2.3.0"
     }
 }
