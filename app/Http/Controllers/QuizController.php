@@ -38,6 +38,8 @@ class QuizController extends Controller
                 default => 'Well how did you reach here?'
             };
 
+            
+            
             Leaderboard::create([
                 'name' => $name,
                 'score' => $score,
@@ -46,8 +48,10 @@ class QuizController extends Controller
                 'time_taken' => $timeTaken,
             ]);
 
+
+
             return Inertia::render('Result', [
-                'name' => $name,
+                'name' =>  $name,
                 'score' => $score,
                 'total_questions' => $totalQuestions,
                 'percentage' => $percentage,
@@ -58,4 +62,7 @@ class QuizController extends Controller
             return response()->json(['error' => 'Invalid data provided'], 400);
         }
     }
+
+
+    
 }

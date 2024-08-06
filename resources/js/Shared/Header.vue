@@ -31,7 +31,7 @@ const appName=computed(()=>page.props.appName)
         <li class="nav-item"><Link href="/results" :class="{'nav-link active':$page.url==='/results','nav-link':$page.url != '/results'}">Results</Link></li>
 
 
-         <Link href="/leaderboard" > <button type="button" class="btn btn-outline-primary">Leaderboard</button></Link>
+         <Link href="/leaderboard" > <button type="button" class="btn btn-outline-primary main-left">Leaderboard</button></Link>
 
 
       </ul>
@@ -41,3 +41,11 @@ const appName=computed(()=>page.props.appName)
 
 
 </template>
+
+<style scoped>
+
+.main-left {
+  margin-left: 10px;
+}
+
+</style>

@@ -1,7 +1,7 @@
 <script setup>
-import Header from '@/Shared/Header.vue';
+import Header from '@/Shared/Admin/Header.vue';
 
-import Footer from '@/Shared/Footer.vue';
+import Footer from '@/Shared/Admin/Footer.vue';
 </script>
 <template>
    <div class="container">

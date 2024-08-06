@@ -12,7 +12,7 @@ class QuestionController extends Controller
     public function index()
     {
         $questions = Question::with('answers')->get();
-        return Inertia::render('Questions', ['questions' => $questions]);
+        return Inertia::render('Admin/Questions', ['questions' => $questions]);
     }
 
     public function store(Request $request)
@@ -52,7 +52,7 @@ class QuestionController extends Controller
         $editQuestion->question= $request['question'];
         $editQuestion->save();
 
-        return redirect('/questions')->with('success','Question edited succesfully');
+        return redirect('admin/questions')->with('success','Question edited succesfully');
     }
 
 
@@ -62,7 +62,7 @@ class QuestionController extends Controller
             $question = Question::findOrFail($id);
             $question->delete();
 
-            return redirect('/questions')->with('success','Question deleted successfully.');
+            return redirect('admin/questions')->with('success','Question deleted successfully.');
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to delete question.'], 500);
         }
