@@ -27,9 +27,30 @@ class LeaderboardController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'score' => 'required|integer|min:0',
-            'total_questions' => 'required|integer|min:1',
+            'score' => 'required|integer',
+            'total_questions' => 'required|integer',
+            'percentage' => 'required|numeric',
+            'time_taken' => 'required|integer',
         ]);
+
+        // Retrieve inputs from the request
+        $name = $request->input('name');
+        $score = $request->input('score');
+        $totalQuestions = $request->input('total_questions');
+        $percentage = $request->input('percentage');
+        $timeTaken = $request->input('time_taken');
+
+
+        // Create a new leaderboard entry
+        Leaderboard::create([
+            'name' => $name,
+            'score' => $score,
+            'total_questions' => $totalQuestions,
+            'percentage' => $percentage,
+            'time_taken' => $timeTaken,
+        ]);
+
+
 
         try {
             Leaderboard::create($request->all());
@@ -38,5 +59,4 @@ class LeaderboardController extends Controller
             return redirect()->back()->with('error', 'Failed to add score to leaderboard');
         }
     }
-    
 }

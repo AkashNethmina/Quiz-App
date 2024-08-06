@@ -37,18 +37,22 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard')
         ->middleware(\App\Http\Middleware\AdminAuth::class);
+
+    // Question routes
+    Route::get('/questions', [QuestionController::class, 'index'])->name('admin.questions')->middleware(\App\Http\Middleware\AdminAuth::class);
+    Route::post('/questions', [QuestionController::class, 'store'])->middleware(\App\Http\Middleware\AdminAuth::class);
+    Route::put('/questions', [QuestionController::class, 'update'])->middleware(\App\Http\Middleware\AdminAuth::class);
+    Route::get('/questions/{question}', [QuestionController::class, 'destroy'])->middleware(\App\Http\Middleware\AdminAuth::class);
+    // Answer routes
+    Route::put('/answers/{answer}', [AnswerController::class, 'update'])->middleware(\App\Http\Middleware\AdminAuth::class);
+
 });
 
 
 
-// Question routes
-Route::get('/questions', [QuestionController::class, 'index'])->name('questions');
-Route::post('/questions', [QuestionController::class, 'store']);
-Route::put('/questions', [QuestionController::class, 'update']);
-Route::get('/questions/{question}', [QuestionController::class, 'destroy']);
 
-// Answer routes
-Route::put('/answers/{answer}', [AnswerController::class, 'update']);
+
+
 
 // Quiz routes
 Route::get('quiz', [QuizController::class, 'index']);

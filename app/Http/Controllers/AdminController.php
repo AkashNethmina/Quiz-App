@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin; // Ensure the Admin model is defined correctly
+use App\Models\Leaderboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +66,11 @@ class AdminController extends Controller
     public function dashboard()
     {
         // Render the admin dashboard page using Inertia.js
-        return Inertia::render('Admin/Dashboard');
+        $leaderboard = Leaderboard::orderBy('score', 'desc')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'leaderboard' => $leaderboard,
+        ]);
     }
+
+   
 }

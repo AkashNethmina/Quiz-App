@@ -17,8 +17,8 @@
             <td>{{ question.type }}</td>
             <td>
               <button @click="viewQuestion(index)" class="btn btn-primary">View</button>
-              <button @click="editquestionModal=true,editQuestion(index)" class="btn btn-success">Edit</button>
-              <button @click="deleteQuestion(question.id)" class="btn btn-danger">Delete</button>
+              <button @click="editquestionModal=true,editQuestion(index)" class="btn btn-success main-left">Edit</button>
+              <button @click="deleteQuestion(question.id)" class="btn btn-danger main-left">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -81,7 +81,7 @@
           <template #footer>
             <span @click="addNewAnswer" v-if="questionType === 'MCQ' && newAnswers.length < 4"><h3>+</h3></span>
             <button @click="destroyModal" class="btn btn-danger">Close</button>
-            <button v-if="(questionType === 'MCQ' && newAnswers.length >= 2) || (questionType === 'True/False' && newAnswers.length === 2)" @click="submitQuestion" class="btn btn-primary">Submit</button>
+            <button v-if="(questionType === 'MCQ' && newAnswers.length >= 2) || (questionType === 'True/False' && newAnswers.length === 2)" @click="submitQuestion" class="btn btn-primary main-left">Submit</button>
           </template>
         </NewQuestionModal>
 
@@ -130,7 +130,7 @@
           </template>
           <template #footer>
             <button @click="destroyModal" class="btn btn-danger">Close</button>
-            <button @click="updateAnswers" class="btn btn-primary">Update</button>
+            <button @click="updateAnswers" class="btn btn-primary main-left">Update</button>
           </template>
         </NewQuestionModal>
 
@@ -149,7 +149,7 @@
           </template>
           <template #footer>
             <button @click="editquestionModal=false" class="btn btn-danger">Close</button>
-            <button @click="updateQuestion" class="btn btn-success">Update</button>
+            <button @click="updateQuestion" class="btn btn-success main-left">Update</button>
           </template>
         </NewQuestionModal>
       </Teleport>
@@ -158,7 +158,8 @@
 
 
 <script setup>
-import Layout from '@/Shared/LeaderLayout.vue';
+
+import Layout from "@/Shared/Admin/Layout.vue";
 import NewQuestionModal from '@/Shared/NewQuestionModal.vue';
 import { router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
@@ -260,7 +261,7 @@ async function submitQuestion() {
     }
 
     try {
-        await router.post('/questions', {
+        await router.post('/admin/questions', {
             question: createdQuestion.value,
             answers: newAnswers.value,
             type: questionType.value
@@ -298,13 +299,13 @@ function handleRadioChange(Id) {
 // Function to update answers
 async function updateAnswers() {
   try {
-      const answerId = answers.value[0].id; // Adjust based on your data structure
-      await axios.put(`/answers/${answerId}`, { answers: answers.value });
-      alert('Answers updated');
-      showViewQuestionModal.value = false;
+    const answerId = answers.value[0].id; // Adjust based on your data structure
+    await axios.put(`/admin/answers/${answerId}`, { answers: answers.value });
+    alert('Answers updated');
+    showViewQuestionModal.value = false;
   } catch (error) {
-      console.error(error);
-      alert('Failed to update answers');
+    console.error(error);
+    alert('Failed to update answers');
   }
 }
 
@@ -318,14 +319,14 @@ function editQuestion(index) {
 
 // Function to update a question
 function updateQuestion() {
-   router.put('/questions', questionForEdit.value)
+   router.put('/admin/questions', questionForEdit.value)
 }
 
 // Function to delete a question
 async function deleteQuestion(id) {
   if (confirm('You are about to delete a record, are you sure?')) {
       try {
-          await router.get('/questions/' + id);
+          await router.get('/admin/questions/' + id);
       } catch (error) {
           console.error(error);
           alert('Failed to delete question');
@@ -338,6 +339,11 @@ async function deleteQuestion(id) {
   <style scoped>
   .main-succ {
     margin-bottom: 20px;
+  }
+
+
+  .main-left {
+    margin-left: 10px;
   }
 
   </style>

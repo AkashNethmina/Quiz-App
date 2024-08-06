@@ -8,5 +8,5 @@ class Leaderboard extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'score', 'total_questions', 'percentage'];
+    protected $fillable = ['name', 'score', 'total_questions', 'percentage' ,'time_taken'];
 }
