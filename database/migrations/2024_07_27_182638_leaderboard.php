@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->integer('score');
             $table->integer('total_questions');
             $table->integer('percentage');
+            $table->time('time_taken');
             $table->timestamps();
         });
     }

@@ -9,6 +9,7 @@
               <th class="table-primary">Name</th>
               <th class="table-primary">Score</th>
               <th class="table-primary">Percentage(on the time)</th>
+              <th class="table-primary">Time Taken</th>
               <th class="table-primary">Total Questions</th>
             </tr>
           </thead>
@@ -18,6 +19,7 @@
               <td>{{ entry.name }}</td>
               <td>{{ entry.score }}</td>
               <td>{{ entry.percentage }}%</td>
+              <td>{{ entry.time_taken}}</td>
               <td>{{ entry.total_questions }}</td>
             </tr>
           </tbody>
@@ -30,7 +32,7 @@
 
 
 
-import Layout from '@/Shared/LeaderLayout.vue';
+  import Layout from '@/Shared/Layout.vue'
 
   const props = defineProps({
     leaderboard: Array,
