@@ -6,13 +6,10 @@
                 <p class="lead">
                     <b>Welcome to the admin dashboard of Quiz App</b>
                 </p>
-                <a
-                    class="btn btn-lg btn-success"
-                    href="../components/navbar/"
-                    role="button"
-                    >Logout
+          
 
-                    <svg
+
+                <Link href="/admin/logout" > <button type="button" class="btn btn-success  main-succ">Logout  <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
@@ -28,8 +25,12 @@
                             fill-rule="evenodd"
                             d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"
                         />
-                    </svg>
-                </a>
+                    </svg></button>
+                </Link>
+
+
+
+
             </div>
         </main>
 
@@ -65,7 +66,7 @@
 
 <script setup>
 import Layout from "@/Shared/Admin/Layout.vue";
-
+import { Link } from "@inertiajs/vue3";
 const props = defineProps({
     leaderboard: Array,
 });
