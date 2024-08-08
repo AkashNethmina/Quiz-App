@@ -17,6 +17,7 @@
             <div v-if="form.errors.email" class="invalid-feedback">
               {{ form.errors.email }}
             </div>
+            
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
