@@ -53,6 +53,7 @@ class QuestionController extends Controller
         $editQuestion->save();
 
         return redirect('admin/questions')->with('success','Question edited succesfully');
+      
     }
 
 

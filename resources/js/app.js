@@ -24,8 +24,4 @@ createInertiaApp({
     includeCSS: true,
     showSpinner: true,
   },
-})
-
-// Initialize Inertia Progress
-
-
+});
