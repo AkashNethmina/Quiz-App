@@ -63,14 +63,19 @@ class AdminController extends Controller
         return redirect()->route('admin.login'); // Redirect to the login page
     }
 
+  
+
     public function dashboard()
     {
-        // Render the admin dashboard page using Inertia.js
-        $leaderboard = Leaderboard::orderBy('score', 'desc')->get();
-        return Inertia::render('Admin/Dashboard', [
-            'leaderboard' => $leaderboard,
+        $leaderboard = Leaderboard::orderBy('score', 'desc')
+            ->orderBy('time_taken', 'asc')
+            ->get();
+
+            return Inertia::render('Admin/Dashboard', [
+                'leaderboard' => $leaderboard,
         ]);
     }
+
 
    
 }

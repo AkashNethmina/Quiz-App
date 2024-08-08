@@ -15,6 +15,8 @@
         "@inertiajs/vue3": "^1.2.0",
         "@vitejs/plugin-vue": "^5.1.1",
         "bootstrap": "^5.3.3",
+        "datatables.net-bs5": "^2.1.3",
+        "datatables.net-vue3": "^3.0.2",
         "vue": "^3.4.34",
         "ziggy-js": "^2.3.0"
     }

@@ -52,11 +52,11 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
-
-
 // Quiz routes
 Route::get('quiz', [QuizController::class, 'index']);
-Route::post('/results', [QuizController::class, 'results']);
+// Route::post('/results', [QuizController::class, 'results']);
+Route::post('/submit-quiz', [QuizController::class, 'submitQuiz'])->name('submit-quiz');
+
 
 // Leaderboard routes
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
