@@ -1,44 +1,82 @@
+<script setup>
+import DataTable from "datatables.net-vue3";
+import DataTablesCore from "datatables.net-bs5";
+import Layout from "@/Shared/Layout.vue";
+DataTable.use(DataTablesCore);
+
+const props = defineProps({
+    leaderboard: Array,
+});
+const columns = [
+    { data: "id", title: "#", className: "text-center" },
+    { data: "name", title: "Name", className: "text-center" },
+    { data: "score", title: "Score", className: "text-center" },
+    {
+        data: "percentage",
+        title: "Percentage ",
+        className: "text-center",
+    },
+    { data: "time_taken", title: "Time Taken", className: "text-center" },
+    {
+        data: "total_questions",
+        title: "Total Questions",
+        className: "text-center",
+    },
+];
+</script>
+
 <template>
     <Layout>
-      <div class="container">
-        <h3 class="text-primary">Leaderboard</h3><br>
-        <table class="table table-bordered table-hover text-center">
-          <thead>
-            <tr>
-              <th class="table-primary">#</th>
-              <th class="table-primary">Name</th>
-              <th class="table-primary">Score</th>
-              <th class="table-primary">Percentage(on the time)</th>
-              <th class="table-primary">Time Taken</th>
-              <th class="table-primary">Total Questions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(entry, index) in leaderboard" :key="entry.id" >
-              <td>{{ index + 1 }}</td>
-              <td>{{ entry.name }}</td>
-              <td>{{ entry.score }}</td>
-              <td>{{ entry.percentage }}%</td>
-              <td>{{ entry.time_taken}}</td>
-              <td>{{ entry.total_questions }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="container">
+            <h2 class="text-primary main-l">Leaderboard</h2>
+            <DataTable
+                :columns="columns"
+                :data="leaderboard"
+                class="table table-hover table-striped table-bordered text-center"
+                width="100%"
+            >
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Score</th>
+                        <th class="text-center">Percentage</th>
+                        <th class="text-center">Time Taken</th>
+                        <th class="text-center">Total Questions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Score</th>
+                        <th class="text-center">Percentage</th>
+                        <th class="text-center">Time Taken</th>
+                        <th class="text-center">Total Questions</th>
+                    </tr>
+                </tfoot>
+            </DataTable>
+        </div>
     </Layout>
-  </template>
+</template>
 
-  <script setup>
+<style>
+@import "bootstrap";
+@import "datatables.net-bs5";
+.main-l {
+    margin-bottom: 50px;
+}
 
+.table td,
+.table th {
+    text-align: center;
+}
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6; /* Customize the border color */
+}
 
-
-  import Layout from '@/Shared/Layout.vue'
-
-  const props = defineProps({
-    leaderboard: Array,
-  });
-
-
-
-
-  </script>
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa; /* Customize the hover background color */
+}
+</style>

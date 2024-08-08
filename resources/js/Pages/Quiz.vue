@@ -18,8 +18,8 @@
                         </div>
                     </div>
                 </a>
-                <a @click="selectedOption(index)" v-for="(answer, index) in answers" 
-                   :class="{'selected': index === selectedAnswer}" 
+                <a @click="selectedOption(index)" v-for="(answer, index) in answers"
+                   :class="{'selected': index === selectedAnswer}"
                    class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
                     <div class="d-flex gap-2 w-100 justify-content-between">
                         <div>
@@ -31,7 +31,7 @@
                     <!-- Show "Next" button if it's not the last question -->
                     <button @click="nextQuestion" v-if="!isLastQuestion" class="btn btn-primary">Next</button>
                     <!-- Show "Submit" button if it's the last question -->
-                    <button @click="calculateResult" v-if="isLastQuestion" class="btn btn-success">Submit</button>
+                    <button @click="submitAnswers" v-if="isLastQuestion" class="btn btn-success">Submit</button>
                 </div>
             </div>
         </div>
@@ -59,15 +59,12 @@ const currentQuestion = computed(() => props.questions[currentIndex.value]);
 const isLastQuestion = computed(() => currentIndex.value === props.questions.length - 1);
 const answers = computed(() => props.questions[currentIndex.value].answers);
 const selectedAnswer = ref(null);
-const result = ref(0);
-const negativeMarking = ref(0); // negative marks
-const timePerQuestion = 30; // 30 seconds per question
-const totalTime = ref(timePerQuestion * props.questions.length); // total quiz time
-const timeRemaining = ref(timePerQuestion); // reset timer for each question
 const playerName = ref('');
 const showNameInput = ref(false);
+const timePerQuestion = 30; // 30 seconds per question
+const timeRemaining = ref(timePerQuestion); // reset timer for each question
 const timer = ref(null);
-const questionTimes = ref([]); // Store time taken for each question
+const userAnswers = ref([]);
 
 // Compute formatted time for display
 const formattedTime = computed(() => {
@@ -81,58 +78,50 @@ function selectedOption(index) {
     selectedAnswer.value = index;
 }
 
-// Move to the next question and track time taken
+// Move to the next question and track answers
 function nextQuestion() {
     if (selectedAnswer.value !== null) {
-        if (props.questions[currentIndex.value].answers[selectedAnswer.value].correct_answer == 1) {
-            result.value++;
-        } else {
-            negativeMarking.value++;
-        }
+        userAnswers.value.push({
+            question_id: currentQuestion.value.id,
+            answer_id: props.questions[currentIndex.value].answers[selectedAnswer.value].id,
+            time_taken: timePerQuestion - timeRemaining.value,
+        });
     }
-    // Record time taken for current question
-    questionTimes.value[currentIndex.value] = timePerQuestion - timeRemaining.value;
-
     if (currentIndex.value < totalQuestions.value - 1) {
         currentIndex.value++;
         selectedAnswer.value = null;
         resetTimer();
-    } else {
-        calculateResult();
     }
 }
 
-// Calculate final results
-function calculateResult() {
+// Submit answers to the backend
+function submitAnswers() {
     if (selectedAnswer.value !== null) {
-        if (props.questions[currentIndex.value].answers[selectedAnswer.value].correct_answer == 1) {
-            result.value++;
-        } else {
-            negativeMarking.value++;
-        }
+        userAnswers.value.push({
+            question_id: currentQuestion.value.id,
+            answer_id: props.questions[currentIndex.value].answers[selectedAnswer.value].id,
+            time_taken: timePerQuestion - timeRemaining.value,
+        });
     }
-
-    // Record time for last question
-    questionTimes.value[currentIndex.value] = timePerQuestion - timeRemaining.value;
-
     clearInterval(timer.value);
     showNameInput.value = true;
 }
 
-// Submit results including time taken for each question
+// Submit results to the backend
 function submitResults() {
-    const finalScore = result.value - negativeMarking.value;
-    const totalTimeTaken = questionTimes.value.reduce((acc, curr) => acc + curr, 0); // Sum of all question times
+    console.log('Submit Results clicked');
+    console.log('Player Name:', playerName.value);
+    console.log('User Answers:', userAnswers.value);
 
-    // Post results to server
-    router.post('/results', {
-        results: {
-            name: playerName.value,
-            score: finalScore, // Final score based on correct answers and negative marking
-            totalQuestions: totalQuestions.value,
-            timeTaken: totalTimeTaken,
-            questionTimes: questionTimes.value, // Include time taken per question
-        },
+    router.post(route('submit-quiz'), {
+        name: playerName.value,
+        answers: userAnswers.value,
+    }).then(response => {
+        console.log('Success:', response);
+        // Handle success response, redirect or show a message
+    }).catch(error => {
+        console.error('Error:', error);
+        // Handle error response, show a message
     });
 }
 

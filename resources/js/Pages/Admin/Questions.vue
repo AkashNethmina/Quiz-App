@@ -1,28 +1,33 @@
 <template>
     <Layout>
       <button @click="createQuestion" class="btn btn-success main-succ">Create</button>
-      <table class="table table-bordered table-hover text-center">
-        <thead>
-          <tr>
-            <th class="table-primary" scope="col">#</th>
-            <th class="table-primary" scope="col">Question</th>
-            <th class="table-primary" scope="col">Type</th>
-            <th class="table-primary" scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(question, index) in questions" :key="index">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ question.question }}</td>
-            <td>{{ question.type }}</td>
-            <td>
-              <button @click="viewQuestion(index)" class="btn btn-primary">View</button>
-              <button @click="editquestionModal=true,editQuestion(index)" class="btn btn-success main-left">Edit</button>
-              <button @click="deleteQuestion(question.id)" class="btn btn-danger main-left">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <DataTable
+                :columns="columns"
+                :data="questions"
+                class="table table-hover table-striped table-bordered text-center"
+                width="100%"
+            >
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Question</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Question</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </tfoot>
+            </DataTable>
+
+
+
+
 
       <Teleport to="body">
         <NewQuestionModal :show="showNewQuestionModal" @close="destroyModal">
@@ -162,9 +167,11 @@
 import Layout from "@/Shared/Admin/Layout.vue";
 import NewQuestionModal from '@/Shared/NewQuestionModal.vue';
 import { router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import axios from 'axios';
+import DataTable from "datatables.net-vue3";
+import DataTablesCore from "datatables.net-bs5";
 
 // Reactive references and computed properties
 const page = usePage();
@@ -312,15 +319,19 @@ async function updateAnswers() {
 // Edit question functionality
 const editquestionModal = ref(false)
 const questionForEdit = ref(null)
+
 function editQuestion(index) {
-  questionForEdit.value = props.questions[index]
+  questionForEdit.value = props.questions[index];
   //alert(index)
+  editquestionModal.value = true;
 }
 
 // Function to update a question
 function updateQuestion() {
+    
    router.put('/admin/questions', questionForEdit.value)
 }
+
 
 // Function to delete a question
 async function deleteQuestion(id) {
@@ -333,17 +344,76 @@ async function deleteQuestion(id) {
       }
   }
 }
+
+
+DataTable.use(DataTablesCore);
+
+const columns = [
+    { data: "id", title: "#", className: "text-center" },
+    { data: "question", title: "Question", className: "text-center" },
+    { data: "type", title: "Type", className: "text-center" },
+    {
+    title: 'Actions',  // Action column header
+    data: null,       // No data binding, we'll use custom rendering
+    orderable: false, // Disable sorting on this column
+    className: 'text-center',
+   
+    render(data, type, row, meta) {
+      return `
+    <button class="btn btn-primary" data-action="view" data-index="${meta.row}">View</button>
+    <button class="btn btn-success main-left" data-action="edit" data-index="${meta.row}">Edit</button>
+    <button class="btn btn-danger main-left" data-action="delete" data-id="${data.id}">Delete</button>
+  `;
+    }}
+];
+
+function handleAction(event) {
+  const action = event.target.getAttribute('data-action');
+  const index = event.target.getAttribute('data-index');
+  const id = event.target.getAttribute('data-id');
+
+  if (action === 'view') {
+    viewQuestion(index);
+  } else if (action === 'edit') {
+    editQuestion(index);
+  } else if (action === 'delete') {
+    deleteQuestion(id);
+  }
+}
+// Initialize the DataTable and attach the event listener
+onMounted(() => {
+  const tableElement = document.querySelector('.table');
+  tableElement.addEventListener('click', handleAction);
+});
+
+
+
 </script>
 
 
   <style scoped>
+
+  @import 'bootstrap';
+  @import 'datatables.net-bs5';
   .main-succ {
     margin-bottom: 20px;
   }
 
-
   .main-left {
     margin-left: 10px;
   }
+
+
+
+.table td, .table th {
+  text-align: center;
+}
+.table-bordered th, .table-bordered td {
+  border: 1px solid #dee2e6; /* Customize the border color */
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa; /* Customize the hover background color */
+}
 
   </style>
