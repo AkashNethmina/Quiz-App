@@ -20,6 +20,7 @@ class QuizController extends Controller
 
     public function submitQuiz(Request $request)
     {
+        // Validate the incoming request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'answers' => 'required|array',
@@ -28,13 +29,15 @@ class QuizController extends Controller
             'answers.*.time_taken' => 'required|integer|min:0',
         ]);
 
+        // Initialize scores
         $score = 0;
         $negativeMarking = 0;
 
+        // Calculate scores and time taken
         foreach ($validatedData['answers'] as $userAnswer) {
             $question = Question::find($userAnswer['question_id']);
             $answer = Answer::find($userAnswer['answer_id']);
-            
+
             if ($answer->correct_answer) {
                 $score++;
             } else {
@@ -56,6 +59,7 @@ class QuizController extends Controller
 
         $percentage = ceil(($finalScore / count($validatedData['answers'])) * 100);
 
+        // Determine feedback message based on percentage score
         $comment = match (true) {
             $percentage >= 80 && $percentage <= 100 => 'Congratulations',
             $percentage >= 60 && $percentage <= 79 => 'Impressive',
@@ -64,6 +68,7 @@ class QuizController extends Controller
             default => 'Well how did you reach here?'
         };
 
+        // Return response with results
         return Inertia::render('Result', [
             'name' => $validatedData['name'],
             'score' => $finalScore,
